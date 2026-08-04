@@ -21,6 +21,8 @@ All member, event, campaign and financial data in this repository is determinist
 | Experiment | Randomized control, generic message and category-personalized message |
 | Customer guardrail | Treatment unsubscribe rate must remain at or below 1% |
 | Governance | Effective-dated consent, suppression, contact cap and campaign-priority exclusions |
+| Activation reliability | 2,700 treatment records reconciled with zero duplicates and zero control records |
+| Decision robustness | Eight policy scenarios covering contamination, imbalance, guardrails, power and ROI |
 | Best observed result | Personalized: 11.33% conversion versus 7.92% control |
 | Decision | Stage personalized to 50%, retain a 10% persistent holdout and monitor listing quality |
 
@@ -75,7 +77,7 @@ while mapping them to Snowflake, dbt, Hightouch, Braze and a BI reporting layer.
 | Collection | Deterministic CSV event simulation | Segment/GA4 events and governed source tables |
 | Warehouse | SQLite raw tables and SQL marts | Snowflake roles, schemas and resource monitors |
 | Transformation | Ordered SQL files | dbt staging, intermediate and mart models |
-| Activation | Pseudonymous audience contract | Hightouch sync into Braze Canvas |
+| Activation | Idempotent destination sync and reconciliation | Hightouch sync into Braze Canvas |
 | Experiment | Pre-campaign deterministic assignment | Immutable assignment and exposure records |
 | Reporting | Static HTML, JSON, Markdown and SVG | BI dashboard, alerts and scheduled decision reporting |
 
@@ -86,8 +88,9 @@ The data flow is deliberately ordered:
 3. Build a pre-treatment member 360 mart.
 4. Apply lifecycle, permission and campaign-safety rules.
 5. Randomize the eligible audience before campaign exposure.
-6. Join 14-day outcomes and estimate intention-to-treat incrementality.
-7. Publish decision metrics, quality evidence and activation-ready outputs.
+6. Sync treatment records to a local destination and validate an idempotent replay.
+7. Join 14-day outcomes and estimate intention-to-treat incrementality.
+8. Stress-test the decision policy and publish evidence-backed outputs.
 
 Detailed ownership and system boundaries are documented in
 [architecture and ownership](docs/architecture.md).
@@ -144,6 +147,11 @@ a fixed order. Each rule has a customer, legal or measurement rationale.
 The activation export contains pseudonymous member IDs and only the fields required to route the
 message. It excludes email addresses, message content and historical GMV. The destination contract is
 defined in [warehouse-to-activation contract](docs/activation_contract.md).
+
+The executable activation mock creates 2,700 treatment memberships, excludes all 1,351 control
+members and replays the same payloads without creating duplicates. Source-to-destination counts,
+validation outcomes and pseudonymous payload examples are recorded in the
+[activation reconciliation report](reports/activation_reconciliation.json).
 
 ## 5. Campaign and experiment design
 
@@ -203,6 +211,11 @@ The power plan requires 972 members per arm. The experiment contains at least 1,
 The methodology and avoided analytical errors are specified before result interpretation in the
 [pre-analysis plan](docs/experiment_plan.md).
 
+The same gate policy is also evaluated against eight deterministic scenarios. Contamination,
+sample-ratio mismatch, pre-treatment imbalance, insufficient lift, unsubscribe breach, negative ROI
+and insufficient power each stop rollout at the expected gate; see the
+[decision scenario report](reports/decision_scenarios.json).
+
 ## 7. Results and rollout decision
 
 The personalized treatment increases 14-day listing conversion by 3.41 percentage points versus
@@ -249,6 +262,8 @@ decision summary.
 | [Experiment metrics](reports/experiment_metrics.json) | JSON | Machine-readable statistical and commercial results |
 | [Data quality report](reports/data_quality.json) | JSON | Evidence for all integrity and campaign-safety checks |
 | [Activation sample](reports/activation_audience_sample.csv) | CSV | Pseudonymous destination-contract example |
+| [Activation reconciliation](reports/activation_reconciliation.json) | JSON | Initial sync, replay and source-to-destination controls |
+| [Decision scenarios](reports/decision_scenarios.json) | JSON | Expected rollout outcome under eight policy scenarios |
 
 The SVG charts embedded in this README are generated from the same current metrics and warehouse
 tables as the dashboard, so they remain consistent when the project is rerun.
@@ -266,7 +281,7 @@ The executable pipeline runs 26 blocking checks before analysis and reporting.
 | Audience safety | Current channel consent, no suppression, contact cap and no journey conflict |
 | Experiment integrity | Complete unique assignment, valid variants and assignment before exposure |
 | Exposure integrity | Zero control contamination and one planned treatment touch |
-| Reconciliation | Eligible audience, assignments, exposures and result population agree |
+| Reconciliation | Audience, assignments, activation destination, exposures and results agree |
 
 The project deliberately excludes real customer data, email addresses, message bodies and production
 credentials. Privacy and release responsibilities that cannot be automated remain explicit human
@@ -284,7 +299,9 @@ marketplace-lifecycle-automation/
 │   ├── generate_data.py           # Deterministic synthetic marketplace data
 │   ├── pipeline.py                # Raw ingestion and SQL model execution
 │   ├── quality_checks.py          # Blocking integrity and campaign-safety checks
+│   ├── activation_mock.py         # Idempotent sync, replay and destination reconciliation
 │   ├── analyze_experiment.py      # Causal comparison and decision policy
+│   ├── simulate_decision_scenarios.py # Deterministic decision-gate stress tests
 │   ├── build_dashboard.py         # Static HTML dashboard
 │   └── build_readme_assets.py     # Data-driven SVG documentation visuals
 ├── sql/                           # Local member, audience and outcome marts
@@ -309,8 +326,9 @@ The first command:
 1. generates 12,000 synthetic members and 96,500 product events with seed `42`;
 2. builds the SQLite warehouse and analytics marts;
 3. executes all data-quality and campaign-safety gates;
-4. analyzes randomization, incrementality, guardrails and scenario economics;
-5. rebuilds the dashboard, executive summary and README visual assets.
+4. syncs and reconciles a treatment-only activation destination;
+5. analyzes randomization, incrementality, guardrails and scenario economics;
+6. stress-tests the rollout policy and rebuilds all reporting assets.
 
 Useful options:
 
@@ -323,7 +341,7 @@ Expected validation result:
 
 ```text
 26/26 data and campaign-safety checks passed
-11/11 regression tests passed
+14/14 regression tests passed
 ```
 
 The GitHub workflow runs the complete build and test sequence on every push and pull request.
