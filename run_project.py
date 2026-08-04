@@ -15,6 +15,7 @@ from src.build_readme_assets import build_readme_assets
 from src.generate_data import generate_data
 from src.pipeline import build_warehouse
 from src.quality_checks import run_quality_checks
+from src.simulate_decision_scenarios import simulate_decision_scenarios
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,10 +55,12 @@ def main() -> int:
 
     print("4/5 Analysing experiment incrementality and guardrails...")
     metrics = analyze_experiment()
+    scenarios = simulate_decision_scenarios(metrics)
     print(
         f"Best observed variant: {metrics['decision']['best_observed_variant']} | "
         f"recommendation: {metrics['decision']['recommendation']}"
     )
+    print(f"Decision policy stress-tested across {len(scenarios['scenarios'])} scenarios.")
 
     print("5/5 Building the campaign dashboard and visual assets...")
     dashboard_path = build_dashboard()

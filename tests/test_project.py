@@ -18,6 +18,7 @@ from src.config import ASSETS_DIR, DATABASE_PATH, RAW_DIR, REPORTS_DIR
 from src.generate_data import generate_data
 from src.pipeline import build_warehouse
 from src.quality_checks import run_quality_checks
+from src.simulate_decision_scenarios import simulate_decision_scenarios
 
 
 class EndToEndProjectTests(unittest.TestCase):
@@ -30,6 +31,7 @@ class EndToEndProjectTests(unittest.TestCase):
         cls.metrics = analyze_experiment()
         cls.dashboard_path = build_dashboard()
         cls.asset_paths = build_readme_assets()
+        cls.decision_scenarios = simulate_decision_scenarios(cls.metrics)
 
     def test_all_quality_and_campaign_safety_checks_pass(self) -> None:
         failures = [check for check in self.quality if check["status"] != "PASS"]
@@ -59,6 +61,29 @@ class EndToEndProjectTests(unittest.TestCase):
         self.assertEqual(
             "personalized", self.metrics["decision"]["best_observed_variant"]
         )
+        self.assertEqual([], self.metrics["decision"]["failed_gates"])
+        self.assertTrue(all(gate["passes"] for gate in self.metrics["decision"]["gates"]))
+
+    def test_failure_scenarios_block_rollout_at_expected_gate(self) -> None:
+        scenarios = {
+            scenario["scenario_id"]: scenario
+            for scenario in self.decision_scenarios["scenarios"]
+        }
+        self.assertTrue(scenarios["baseline"]["decision"]["rollout_ready"])
+        expected_failures = {
+            "control_contamination": "data_quality",
+            "sample_ratio_mismatch": "sample_ratio_mismatch",
+            "pre_treatment_imbalance": "pre_treatment_balance",
+            "no_confirmatory_lift": "statistical_significance",
+            "unsubscribe_breach": "unsubscribe_guardrail",
+            "negative_roi": "commercial_viability",
+            "underpowered_test": "statistical_power",
+        }
+        for scenario_id, gate_name in expected_failures.items():
+            with self.subTest(scenario=scenario_id):
+                decision = scenarios[scenario_id]["decision"]
+                self.assertFalse(decision["rollout_ready"])
+                self.assertIn(gate_name, decision["failed_gates"])
 
     def test_two_proportion_interval_contains_observed_difference(self) -> None:
         result = _two_proportion_test(162, 1358, 93, 1358)

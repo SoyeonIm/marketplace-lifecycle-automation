@@ -153,6 +153,82 @@ def _randomization_diagnostics(connection: sqlite3.Connection, arms: dict[str, d
     }
 
 
+def evaluate_rollout_decision(
+    best_variant: str,
+    comparison: dict,
+    randomization: dict,
+    power_plan: dict,
+    *,
+    quality_checks_pass: bool = True,
+) -> dict:
+    """Evaluate independent rollout gates and return an auditable decision."""
+    gates = [
+        {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass" if quality_checks_pass else "failure detected",
+            "passes": quality_checks_pass,
+        },
+        {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": randomization["sample_ratio_mismatch"]["p_value"],
+            "passes": randomization["sample_ratio_mismatch"]["passes"],
+        },
+        {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": randomization["pre_treatment_balance"]["max_absolute_smd"],
+            "passes": randomization["pre_treatment_balance"]["passes"],
+        },
+        {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": comparison["bonferroni_p_value"],
+            "passes": comparison["bonferroni_p_value"] < 0.05,
+        },
+        {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": comparison["ci_95_low_pp"],
+            "passes": comparison["ci_95_low_pp"] > 0,
+        },
+        {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": comparison["guardrail_unsubscribe_rate_pct"],
+            "passes": comparison["passes_unsubscribe_guardrail"],
+        },
+        {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": comparison["estimated_roi_pct"],
+            "passes": comparison["estimated_roi_pct"] > 0,
+        },
+        {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": power_plan["observed_members_per_arm"],
+            "passes": power_plan["passes"],
+        },
+    ]
+    failed_gates = [gate["name"] for gate in gates if not gate["passes"]]
+    rollout_ready = not failed_gates
+    recommendation = (
+        f"Roll out {best_variant} to a staged 50% audience, retain a 10% holdout, and monitor "
+        "unsubscribe and listing quality."
+        if rollout_ready
+        else "Do not roll out; investigate failed gates: " + ", ".join(failed_gates) + "."
+    )
+    return {
+        "best_observed_variant": best_variant,
+        "rollout_ready": rollout_ready,
+        "failed_gates": failed_gates,
+        "gates": gates,
+        "recommendation": recommendation,
+    }
+
+
 def analyze_experiment() -> dict:
     ensure_directories()
     connection = sqlite3.connect(DATABASE_PATH)
@@ -228,20 +304,11 @@ def analyze_experiment() -> dict:
 
     best_variant = max(comparisons, key=lambda name: comparisons[name]["absolute_uplift_pp"])
     best = comparisons[best_variant]
-    rollout_ready = (
-        best["bonferroni_p_value"] < 0.05
-        and best["ci_95_low_pp"] > 0
-        and best["passes_unsubscribe_guardrail"]
-        and best["estimated_roi_pct"] > 0
-        and randomization["sample_ratio_mismatch"]["passes"]
-        and randomization["pre_treatment_balance"]["passes"]
-        and power_plan["passes"]
-    )
-    recommendation = (
-        f"Roll out {best_variant} to a staged 50% audience, retain a 10% holdout, and monitor "
-        "unsubscribe and listing quality."
-        if rollout_ready
-        else f"Do not roll out yet; extend the {best_variant} test until power and guardrails are met."
+    decision = evaluate_rollout_decision(
+        best_variant,
+        best,
+        randomization,
+        power_plan,
     )
 
     metrics = {
@@ -252,11 +319,7 @@ def analyze_experiment() -> dict:
         "comparisons_vs_control": comparisons,
         "randomization_diagnostics": randomization,
         "power_plan": power_plan,
-        "decision": {
-            "best_observed_variant": best_variant,
-            "rollout_ready": rollout_ready,
-            "recommendation": recommendation,
-        },
+        "decision": decision,
         "commercial_assumptions": {
             "value_per_incremental_listing_nzd": VALUE_PER_INCREMENTAL_LISTING_NZD,
             "note": "Synthetic scenario assumption; not real company financial data.",

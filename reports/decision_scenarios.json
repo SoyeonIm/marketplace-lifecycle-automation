@@ -1,0 +1,500 @@
+{
+  "policy": "every independent rollout gate must pass",
+  "scenarios": [
+    {
+      "scenario_id": "baseline",
+      "description": "All pre-analysis, statistical, customer and commercial gates pass.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": true,
+        "failed_gates": [],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Roll out personalized to a staged 50% audience, retain a 10% holdout, and monitor unsubscribe and listing quality."
+      }
+    },
+    {
+      "scenario_id": "control_contamination",
+      "description": "A control member receives a target-campaign message.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "data_quality"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "failure detected",
+            "passes": false
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: data_quality."
+      }
+    },
+    {
+      "scenario_id": "sample_ratio_mismatch",
+      "description": "Observed assignment counts are inconsistent with the allocation plan.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "sample_ratio_mismatch"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.0005,
+            "passes": false
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: sample_ratio_mismatch."
+      }
+    },
+    {
+      "scenario_id": "pre_treatment_imbalance",
+      "description": "A pre-treatment covariate exceeds the balance threshold.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "pre_treatment_balance"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.16,
+            "passes": false
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: pre_treatment_balance."
+      }
+    },
+    {
+      "scenario_id": "no_confirmatory_lift",
+      "description": "The treatment point estimate is positive but confirmatory evidence fails.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "statistical_significance",
+          "confidence_interval"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.18,
+            "passes": false
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": -0.65,
+            "passes": false
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: statistical_significance, confidence_interval."
+      }
+    },
+    {
+      "scenario_id": "unsubscribe_breach",
+      "description": "The treatment exceeds the one-percent unsubscribe guardrail.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "unsubscribe_guardrail"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 1.35,
+            "passes": false
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: unsubscribe_guardrail."
+      }
+    },
+    {
+      "scenario_id": "negative_roi",
+      "description": "Approved unit economics produce a negative scenario ROI.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "commercial_viability"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": -18.0,
+            "passes": false
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 1350,
+            "passes": true
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: commercial_viability."
+      }
+    },
+    {
+      "scenario_id": "underpowered_test",
+      "description": "The available audience is below the pre-specified sample requirement.",
+      "decision": {
+        "best_observed_variant": "personalized",
+        "rollout_ready": false,
+        "failed_gates": [
+          "statistical_power"
+        ],
+        "gates": [
+          {
+            "name": "data_quality",
+            "requirement": "all blocking data and campaign-safety checks pass",
+            "observed": "pass",
+            "passes": true
+          },
+          {
+            "name": "sample_ratio_mismatch",
+            "requirement": "p-value >= 0.01",
+            "observed": 0.9997531778366229,
+            "passes": true
+          },
+          {
+            "name": "pre_treatment_balance",
+            "requirement": "maximum absolute SMD < 0.10",
+            "observed": 0.0474546630870764,
+            "passes": true
+          },
+          {
+            "name": "statistical_significance",
+            "requirement": "Bonferroni-adjusted p-value < 0.05",
+            "observed": 0.005273908171429068,
+            "passes": true
+          },
+          {
+            "name": "confidence_interval",
+            "requirement": "95% confidence interval lower bound > 0",
+            "observed": 1.1895786287261825,
+            "passes": true
+          },
+          {
+            "name": "unsubscribe_guardrail",
+            "requirement": "unsubscribe rate <= 1%",
+            "observed": 0.2222222222222222,
+            "passes": true
+          },
+          {
+            "name": "commercial_viability",
+            "requirement": "scenario ROI > 0%",
+            "observed": 72.40517228356923,
+            "passes": true
+          },
+          {
+            "name": "statistical_power",
+            "requirement": "observed members per arm >= required members per arm",
+            "observed": 971,
+            "passes": false
+          }
+        ],
+        "recommendation": "Do not roll out; investigate failed gates: statistical_power."
+      }
+    }
+  ]
+}
