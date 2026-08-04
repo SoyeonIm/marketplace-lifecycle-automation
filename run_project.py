@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.analyze_experiment import analyze_experiment
+from src.activation_mock import run_activation_mock
 from src.build_dashboard import build_dashboard
 from src.build_readme_assets import build_readme_assets
 from src.generate_data import generate_data
@@ -34,17 +35,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    print("1/5 Generating privacy-safe synthetic marketplace data...")
+    print("1/6 Generating privacy-safe synthetic marketplace data...")
     if not args.skip_generate:
         generation = generate_data(member_count=args.members, seed=args.seed)
         print(json.dumps(generation, indent=2))
     else:
         print("Reusing existing raw CSV files.")
 
-    print("2/5 Building the local SQL warehouse and marts...")
+    print("2/6 Building the local SQL warehouse and marts...")
     build_warehouse()
 
-    print("3/5 Running data quality and campaign safety checks...")
+    print("3/6 Running data quality and campaign safety checks...")
     quality = run_quality_checks(write_report=True)
     failed = [check for check in quality if check["status"] != "PASS"]
     print(f"{len(quality) - len(failed)}/{len(quality)} checks passed.")
@@ -53,7 +54,14 @@ def main() -> int:
             print(f"FAILED: {check['name']} - {check['detail']}")
         return 1
 
-    print("4/5 Analysing experiment incrementality and guardrails...")
+    print("4/6 Running activation sync, replay and reconciliation...")
+    activation = run_activation_mock(reset=True)
+    print(
+        f"Activation destination: {activation['reconciliation']['destination_active_count']:,} "
+        f"active records | delta: {activation['reconciliation']['source_destination_delta']}"
+    )
+
+    print("5/6 Analysing experiment incrementality and guardrails...")
     metrics = analyze_experiment()
     scenarios = simulate_decision_scenarios(metrics)
     print(
@@ -62,7 +70,7 @@ def main() -> int:
     )
     print(f"Decision policy stress-tested across {len(scenarios['scenarios'])} scenarios.")
 
-    print("5/5 Building the campaign dashboard and visual assets...")
+    print("6/6 Building the campaign dashboard and visual assets...")
     dashboard_path = build_dashboard()
     asset_paths = build_readme_assets()
     print(f"Done. Open {dashboard_path}")

@@ -18,6 +18,9 @@ data/raw/*.csv
 data/warehouse.sqlite
 data/warehouse.sqlite-shm
 data/warehouse.sqlite-wal
+data/activation_destination.sqlite
+data/activation_destination.sqlite-shm
+data/activation_destination.sqlite-wal
 
 dbt/target/
 dbt/logs/

@@ -1,0 +1,96 @@
+{
+  "destination": "local_activation_mock",
+  "first_sync": {
+    "run_id": "initial-sync",
+    "attempted": 2700,
+    "created": 2700,
+    "updated": 0,
+    "unchanged": 0,
+    "suppressed": 0,
+    "rejected": 0
+  },
+  "idempotent_replay": {
+    "run_id": "idempotent-replay",
+    "attempted": 2700,
+    "created": 0,
+    "updated": 0,
+    "unchanged": 2700,
+    "suppressed": 0,
+    "rejected": 0
+  },
+  "reconciliation": {
+    "eligible_source_count": 4051,
+    "control_excluded_count": 1351,
+    "treatment_source_count": 2700,
+    "destination_active_count": 2700,
+    "source_destination_delta": 0,
+    "duplicate_idempotency_keys": 0,
+    "destination_control_count": 0
+  },
+  "checks": [
+    {
+      "name": "treatment_source_matches_destination",
+      "status": "PASS"
+    },
+    {
+      "name": "control_never_activated",
+      "status": "PASS"
+    },
+    {
+      "name": "idempotent_replay_creates_no_duplicates",
+      "status": "PASS"
+    }
+  ],
+  "sample_payloads": [
+    {
+      "member_id": "M000009",
+      "campaign_id": "seller_reactivation_2026_08",
+      "variant": "generic",
+      "activation_channel": "email",
+      "preferred_category": "Computers",
+      "historical_listing_count": 2,
+      "marketing_contacts_7d": 0,
+      "audience_created_at": "2026-08-01 09:00:00"
+    },
+    {
+      "member_id": "M000010",
+      "campaign_id": "seller_reactivation_2026_08",
+      "variant": "generic",
+      "activation_channel": "email",
+      "preferred_category": "Sports",
+      "historical_listing_count": 3,
+      "marketing_contacts_7d": 0,
+      "audience_created_at": "2026-08-01 09:00:00"
+    },
+    {
+      "member_id": "M000014",
+      "campaign_id": "seller_reactivation_2026_08",
+      "variant": "generic",
+      "activation_channel": "email",
+      "preferred_category": "Electronics",
+      "historical_listing_count": 1,
+      "marketing_contacts_7d": 0,
+      "audience_created_at": "2026-08-01 09:00:00"
+    },
+    {
+      "member_id": "M000019",
+      "campaign_id": "seller_reactivation_2026_08",
+      "variant": "generic",
+      "activation_channel": "email",
+      "preferred_category": "Home & living",
+      "historical_listing_count": 2,
+      "marketing_contacts_7d": 0,
+      "audience_created_at": "2026-08-01 09:00:00"
+    },
+    {
+      "member_id": "M000020",
+      "campaign_id": "seller_reactivation_2026_08",
+      "variant": "generic",
+      "activation_channel": "email",
+      "preferred_category": "Electronics",
+      "historical_listing_count": 4,
+      "marketing_contacts_7d": 0,
+      "audience_created_at": "2026-08-01 09:00:00"
+    }
+  ]
+}

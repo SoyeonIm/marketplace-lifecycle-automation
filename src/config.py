@@ -10,6 +10,7 @@ REPORTS_DIR = PROJECT_ROOT / "reports"
 ASSETS_DIR = PROJECT_ROOT / "docs" / "assets"
 SQL_DIR = PROJECT_ROOT / "sql"
 DATABASE_PATH = PROJECT_ROOT / "data" / "warehouse.sqlite"
+ACTIVATION_DATABASE_PATH = PROJECT_ROOT / "data" / "activation_destination.sqlite"
 
 CAMPAIGN_ID = "seller_reactivation_2026_08"
 EXPERIMENT_ID = "exp_seller_reactivation_2026_08"

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import closing
 from html import escape
 from pathlib import Path
 
@@ -31,7 +32,7 @@ def _write_svg(name: str, content: str) -> Path:
 def _load_inputs() -> tuple[dict, list[dict], int, int]:
     metrics = json.loads((REPORTS_DIR / "experiment_metrics.json").read_text(encoding="utf-8"))
     quality = json.loads((REPORTS_DIR / "data_quality.json").read_text(encoding="utf-8"))
-    with sqlite3.connect(DATABASE_PATH) as connection:
+    with closing(sqlite3.connect(DATABASE_PATH)) as connection:
         funnel_queries = [
             ("All members", "1 = 1"),
             ("Seller history", "has_seller_history = 1"),

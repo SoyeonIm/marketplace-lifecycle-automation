@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
 import sys
 import unittest
 import xml.etree.ElementTree as ET
+from contextlib import closing
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +14,12 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.analyze_experiment import _two_proportion_test, analyze_experiment
+from src.activation_mock import (
+    build_activation_records,
+    initialize_destination,
+    run_activation_mock,
+    sync_activation_records,
+)
 from src.build_dashboard import build_dashboard
 from src.build_readme_assets import build_readme_assets
 from src.config import ASSETS_DIR, DATABASE_PATH, RAW_DIR, REPORTS_DIR
@@ -32,6 +40,7 @@ class EndToEndProjectTests(unittest.TestCase):
         cls.dashboard_path = build_dashboard()
         cls.asset_paths = build_readme_assets()
         cls.decision_scenarios = simulate_decision_scenarios(cls.metrics)
+        cls.activation_report = run_activation_mock(reset=True)
 
     def test_all_quality_and_campaign_safety_checks_pass(self) -> None:
         failures = [check for check in self.quality if check["status"] != "PASS"]
@@ -84,6 +93,39 @@ class EndToEndProjectTests(unittest.TestCase):
                 decision = scenarios[scenario_id]["decision"]
                 self.assertFalse(decision["rollout_ready"])
                 self.assertIn(gate_name, decision["failed_gates"])
+
+    def test_activation_sync_is_idempotent_and_reconciled(self) -> None:
+        report = self.activation_report
+        treatment_count = report["reconciliation"]["treatment_source_count"]
+        self.assertEqual(treatment_count, report["first_sync"]["created"])
+        self.assertEqual(treatment_count, report["idempotent_replay"]["unchanged"])
+        self.assertEqual(
+            treatment_count,
+            report["reconciliation"]["destination_active_count"],
+        )
+        self.assertEqual(0, report["reconciliation"]["source_destination_delta"])
+        self.assertEqual(0, report["reconciliation"]["duplicate_idempotency_keys"])
+        self.assertTrue(all(check["status"] == "PASS" for check in report["checks"]))
+        self.assertNotIn("email_address", report["sample_payloads"][0])
+
+    def test_activation_validation_suppresses_and_rejects_unsafe_records(self) -> None:
+        source_records = build_activation_records()
+        suppressed = dict(source_records[0])
+        suppressed["is_suppressed"] = 1
+        invalid_channel = dict(source_records[1])
+        invalid_channel["activation_channel"] = "sms"
+        control = dict(source_records[2])
+        control["variant"] = "control"
+        with closing(sqlite3.connect(":memory:")) as destination:
+            initialize_destination(destination, reset=True)
+            result = sync_activation_records(
+                [suppressed, invalid_channel, control],
+                destination,
+                run_id="validation-test",
+            )
+        self.assertEqual(1, result["suppressed"])
+        self.assertEqual(2, result["rejected"])
+        self.assertEqual(0, result["created"])
 
     def test_two_proportion_interval_contains_observed_difference(self) -> None:
         result = _two_proportion_test(162, 1358, 93, 1358)
