@@ -11,6 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.analyze_experiment import analyze_experiment
 from src.build_dashboard import build_dashboard
+from src.build_readme_assets import build_readme_assets
 from src.generate_data import generate_data
 from src.pipeline import build_warehouse
 from src.quality_checks import run_quality_checks
@@ -58,9 +59,11 @@ def main() -> int:
         f"recommendation: {metrics['decision']['recommendation']}"
     )
 
-    print("5/5 Building the campaign dashboard...")
+    print("5/5 Building the campaign dashboard and visual assets...")
     dashboard_path = build_dashboard()
+    asset_paths = build_readme_assets()
     print(f"Done. Open {dashboard_path}")
+    print(f"Generated {len(asset_paths)} README visual assets.")
     return 0
 
 

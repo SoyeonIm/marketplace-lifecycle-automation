@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="550" viewBox="0 0 1200 550" role="img" aria-labelledby="title desc">
+  <title id="title">Randomized experiment conversion results</title>
+  <desc id="desc">Personalized treatment converted 11.33 percent compared with 7.92 percent in control, a statistically significant 3.41 percentage point uplift.</desc>
+  <rect width="1200" height="550" rx="20" fill="#ffffff"/>
+  <text x="48" y="48" fill="#17212b" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="27" font-weight="750">14-day listing conversion by randomized arm</text>
+  <text x="48" y="76" fill="#647383" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14">Intention-to-treat comparison; opens and clicks remain diagnostic metrics.</text>
+  <g font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"><line x1="90" y1="455.0" x2="760" y2="455.0" stroke="#dce5eb"/><text x="72" y="460.0" text-anchor="end" fill="#647383" font-size="12">0%</text><line x1="90" y1="374.0" x2="760" y2="374.0" stroke="#dce5eb"/><text x="72" y="379.0" text-anchor="end" fill="#647383" font-size="12">3%</text><line x1="90" y1="293.0" x2="760" y2="293.0" stroke="#dce5eb"/><text x="72" y="298.0" text-anchor="end" fill="#647383" font-size="12">6%</text><line x1="90" y1="212.0" x2="760" y2="212.0" stroke="#dce5eb"/><text x="72" y="217.0" text-anchor="end" fill="#647383" font-size="12">9%</text><line x1="90" y1="131.0" x2="760" y2="131.0" stroke="#dce5eb"/><text x="72" y="136.0" text-anchor="end" fill="#647383" font-size="12">12%</text>
+    <rect x="166" y="241.2" width="128" height="213.8" rx="10" fill="#9ba8b3"/>
+    <text x="230" y="228.2" text-anchor="middle" fill="#17212b" font-size="21" font-weight="750">7.92%</text>
+    <text x="230" y="482" text-anchor="middle" fill="#17212b" font-size="14" font-weight="650">Control</text>
+    <text x="230" y="504" text-anchor="middle" fill="#647383" font-size="12">n=1,351</text>
+    <rect x="368" y="187.0" width="128" height="268.0" rx="10" fill="#087ec7"/>
+    <text x="432" y="174.0" text-anchor="middle" fill="#17212b" font-size="21" font-weight="750">9.93%</text>
+    <text x="432" y="482" text-anchor="middle" fill="#17212b" font-size="14" font-weight="650">Generic</text>
+    <text x="432" y="504" text-anchor="middle" fill="#647383" font-size="12">n=1,350</text>
+    <rect x="570" y="149.0" width="128" height="306.0" rx="10" fill="#f6a800"/>
+    <text x="634" y="136.0" text-anchor="middle" fill="#17212b" font-size="21" font-weight="750">11.33%</text>
+    <text x="634" y="482" text-anchor="middle" fill="#17212b" font-size="14" font-weight="650">Personalized</text>
+    <text x="634" y="504" text-anchor="middle" fill="#647383" font-size="12">n=1,350</text></g>
+  <g transform="translate(806 106)" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+    <rect width="346" height="370" rx="18" fill="#e9f4fb" stroke="#cde5f4"/>
+    <text x="24" y="40" fill="#075f9e" font-size="12" font-weight="750" letter-spacing="1.1">CONFIRMATORY RESULT</text>
+    <text x="24" y="88" fill="#17212b" font-size="31" font-weight="780">+3.41 pp</text>
+    <text x="24" y="115" fill="#647383" font-size="14">personalized versus control</text>
+    <line x1="24" y1="140" x2="322" y2="140" stroke="#c7dce9"/>
+    <text x="24" y="177" fill="#17212b" font-size="14" font-weight="650">95% CI</text>
+    <text x="322" y="177" text-anchor="end" fill="#17212b" font-size="14">+1.19 to +5.65 pp</text>
+    <text x="24" y="214" fill="#17212b" font-size="14" font-weight="650">Bonferroni-adjusted p</text>
+    <text x="322" y="214" text-anchor="end" fill="#17212b" font-size="14">0.0053</text>
+    <text x="24" y="251" fill="#17212b" font-size="14" font-weight="650">Unsubscribe guardrail</text>
+    <text x="322" y="251" text-anchor="end" fill="#14845c" font-size="14" font-weight="700">0.22% ≤ 1.00%</text>
+    <text x="24" y="288" fill="#17212b" font-size="14" font-weight="650">Incremental listings</text>
+    <text x="322" y="288" text-anchor="end" fill="#17212b" font-size="14">46 estimated</text>
+    <rect x="24" y="316" width="298" height="34" rx="9" fill="#e8f5ef"/>
+    <text x="173" y="338" text-anchor="middle" fill="#14845c" font-size="13" font-weight="750">Staged rollout with persistent holdout</text>
+  </g>
+</svg>

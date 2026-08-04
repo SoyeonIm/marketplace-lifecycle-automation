@@ -4,6 +4,7 @@ import json
 import re
 import sys
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -12,7 +13,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.analyze_experiment import _two_proportion_test, analyze_experiment
 from src.build_dashboard import build_dashboard
-from src.config import DATABASE_PATH, RAW_DIR, REPORTS_DIR
+from src.build_readme_assets import build_readme_assets
+from src.config import ASSETS_DIR, DATABASE_PATH, RAW_DIR, REPORTS_DIR
 from src.generate_data import generate_data
 from src.pipeline import build_warehouse
 from src.quality_checks import run_quality_checks
@@ -27,6 +29,7 @@ class EndToEndProjectTests(unittest.TestCase):
         cls.quality = run_quality_checks(write_report=True)
         cls.metrics = analyze_experiment()
         cls.dashboard_path = build_dashboard()
+        cls.asset_paths = build_readme_assets()
 
     def test_all_quality_and_campaign_safety_checks_pass(self) -> None:
         failures = [check for check in self.quality if check["status"] != "PASS"]
@@ -73,6 +76,27 @@ class EndToEndProjectTests(unittest.TestCase):
         self.assertNotIn("email_address", header)
         self.assertIn("member_id", header)
 
+    def test_readme_visual_assets_are_generated_from_current_metrics(self) -> None:
+        expected = {
+            ASSETS_DIR / "project-overview.svg",
+            ASSETS_DIR / "audience-funnel.svg",
+            ASSETS_DIR / "experiment-results.svg",
+            ASSETS_DIR / "system-architecture.svg",
+        }
+        self.assertEqual(expected, set(self.asset_paths))
+        for svg_path in expected:
+            self.assertEqual(
+                "{http://www.w3.org/2000/svg}svg",
+                ET.parse(svg_path).getroot().tag,
+            )
+        experiment_svg = (ASSETS_DIR / "experiment-results.svg").read_text(encoding="utf-8")
+        personalized = self.metrics["arms"]["personalized"]
+        self.assertIn(f"{personalized['conversion_rate'] * 100:.2f}%", experiment_svg)
+        self.assertIn("Bonferroni-adjusted", experiment_svg)
+        preview = ASSETS_DIR / "dashboard-preview.jpg"
+        self.assertTrue(preview.exists())
+        self.assertEqual(b"\xff\xd8", preview.read_bytes()[:2])
+
     def test_metrics_artifact_labels_commercial_assumptions_synthetic(self) -> None:
         metrics_path = REPORTS_DIR / "experiment_metrics.json"
         artifact = json.loads(metrics_path.read_text(encoding="utf-8"))
@@ -95,7 +119,9 @@ class EndToEndProjectTests(unittest.TestCase):
         broken: list[str] = []
         for markdown_path in markdown_files:
             content = markdown_path.read_text(encoding="utf-8")
-            for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", content):
+            targets = re.findall(r"\[[^\]]+\]\(([^)]+)\)", content)
+            targets.extend(re.findall(r'<img[^>]+src="([^"]+)"', content))
+            for target in targets:
                 if target.startswith(("http://", "https://", "mailto:", "#")):
                     continue
                 relative_target = target.split("#", 1)[0]

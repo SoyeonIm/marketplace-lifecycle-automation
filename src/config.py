@@ -7,6 +7,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 REPORTS_DIR = PROJECT_ROOT / "reports"
+ASSETS_DIR = PROJECT_ROOT / "docs" / "assets"
 SQL_DIR = PROJECT_ROOT / "sql"
 DATABASE_PATH = PROJECT_ROOT / "data" / "warehouse.sqlite"
 
@@ -35,4 +36,4 @@ REGIONS = ["Auckland", "Wellington", "Canterbury", "Waikato", "Otago", "Other"]
 def ensure_directories() -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-
+    ASSETS_DIR.mkdir(parents=True, exist_ok=True)
