@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: mart_campaign_eligible_audience
+    description: Governed, pseudonymous audience ready for activation.
+    columns:
+      - name: member_id
+        description: Existing pseudonymous destination profile key.
+        tests: [not_null, unique]
+      - name: activation_channel
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['email', 'push']
+      - name: campaign_id
+        tests: [not_null]
+      - name: audience_created_at
+        tests: [not_null]
+  - name: mart_experiment_member_outcomes
+    description: Intention-to-treat outcome table at assigned-member grain.
+    columns:
+      - name: member_id
+        tests: [not_null, unique]
+      - name: experiment_id
+        tests: [not_null]
+      - name: variant
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['control', 'generic', 'personalized']
+  - name: mart_experiment_results
+    description: Reconciled aggregate counts by experiment arm for downstream statistical analysis.
+    columns:
+      - name: variant
+        tests:
+          - not_null
+          - unique
+          - accepted_values:
+              values: ['control', 'generic', 'personalized']
+      - name: assigned_members
+        tests: [not_null]

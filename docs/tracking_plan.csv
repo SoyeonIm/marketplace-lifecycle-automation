@@ -1,0 +1,9 @@
+event_name,business_definition,trigger,required_properties,identity_requirement,primary_owner,quality_rule
+session_started,Member begins an authenticated or anonymous session,First active app or web interaction in a session,"event_id,event_ts,anonymous_id,platform",anonymous_id required; member_id when known,Product Analytics,event_id unique and timestamp not in future
+search_performed,Member submits a marketplace search,Search results request succeeds,"event_id,event_ts,anonymous_id,category,platform",anonymous_id required; member_id when known,Marketplace Product,category from governed taxonomy
+item_viewed,Member views a listing detail page,Listing page or screen becomes viewable,"event_id,event_ts,anonymous_id,category,platform",anonymous_id required; member_id when known,Marketplace Product,one canonical event per view
+watchlist_added,Member adds a listing to a watchlist,Watchlist service confirms success,"event_id,event_ts,member_id,category,platform",known member required,Customer Engagement,member_id and category not null
+purchase_completed,Marketplace purchase completes,Payment or transaction service confirms completion,"event_id,event_ts,member_id,category,platform",known member required,Marketplace Product,exclude failed or reversed attempts
+listing_started,Member begins the listing flow,First listing form interaction,"event_id,event_ts,member_id,category,platform",known member required,Seller Experience,member_id not null
+listing_created,Listing is successfully published,Listing service returns a persistent listing ID,"event_id,event_ts,member_id,category,source",known member required,Seller Experience,source resolves to listing_id and is idempotent
+

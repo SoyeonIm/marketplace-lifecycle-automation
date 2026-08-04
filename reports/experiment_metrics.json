@@ -1,0 +1,148 @@
+{
+  "experiment_id": "exp_seller_reactivation_2026_08",
+  "analysis_window": "2026-08-01 to 2026-08-15",
+  "primary_metric": "member created at least one listing within 14 days",
+  "arms": {
+    "control": {
+      "variant": "control",
+      "assigned_members": 1351,
+      "converted_members": 107,
+      "conversion_rate_pct": 7.92,
+      "total_listings_14d": 107,
+      "observed_gmv_14d": 5067.97,
+      "message_sent_count": 0,
+      "message_click_count": 0,
+      "click_rate_pct": null,
+      "unsubscribe_count": 0,
+      "unsubscribe_rate_pct": null,
+      "conversion_rate": 0.07920059215396003,
+      "unsubscribe_rate": 0.0
+    },
+    "generic": {
+      "variant": "generic",
+      "assigned_members": 1350,
+      "converted_members": 134,
+      "conversion_rate_pct": 9.93,
+      "total_listings_14d": 134,
+      "observed_gmv_14d": 6127.68,
+      "message_sent_count": 1350,
+      "message_click_count": 121,
+      "click_rate_pct": 8.96,
+      "unsubscribe_count": 10,
+      "unsubscribe_rate_pct": 0.74,
+      "conversion_rate": 0.09925925925925926,
+      "unsubscribe_rate": 0.007407407407407408
+    },
+    "personalized": {
+      "variant": "personalized",
+      "assigned_members": 1350,
+      "converted_members": 153,
+      "conversion_rate_pct": 11.33,
+      "total_listings_14d": 153,
+      "observed_gmv_14d": 6997.83,
+      "message_sent_count": 1350,
+      "message_click_count": 172,
+      "click_rate_pct": 12.74,
+      "unsubscribe_count": 3,
+      "unsubscribe_rate_pct": 0.22,
+      "conversion_rate": 0.11333333333333333,
+      "unsubscribe_rate": 0.0022222222222222222
+    }
+  },
+  "comparisons_vs_control": {
+    "generic": {
+      "absolute_uplift_pp": 2.005866710529923,
+      "relative_uplift_pct": 25.326410522672205,
+      "ci_95_low_pp": -0.14827206190638592,
+      "ci_95_high_pp": 4.168728797736034,
+      "z_score": 1.8284489813965055,
+      "p_value": 0.06748219593315241,
+      "bonferroni_p_value": 0.13496439186630482,
+      "incremental_listings_estimate": 27.07920059215396,
+      "assumed_incremental_value_nzd": 148.93560325684678,
+      "assumed_campaign_cost_nzd": 100.25,
+      "estimated_roi_pct": 48.5641927749095,
+      "guardrail_unsubscribe_rate_pct": 0.7407407407407408,
+      "passes_unsubscribe_guardrail": true
+    },
+    "personalized": {
+      "absolute_uplift_pp": 3.41327411793733,
+      "relative_uplift_pct": 43.096573208722745,
+      "ci_95_low_pp": 1.1895786287261825,
+      "ci_95_high_pp": 5.649076626579727,
+      "z_score": 3.007166362144219,
+      "p_value": 0.002636954085714534,
+      "bonferroni_p_value": 0.005273908171429068,
+      "incremental_listings_estimate": 46.07920059215396,
+      "assumed_incremental_value_nzd": 253.43560325684678,
+      "assumed_campaign_cost_nzd": 147.0,
+      "estimated_roi_pct": 72.40517228356923,
+      "guardrail_unsubscribe_rate_pct": 0.2222222222222222,
+      "passes_unsubscribe_guardrail": true
+    }
+  },
+  "randomization_diagnostics": {
+    "sample_ratio_mismatch": {
+      "observed_counts": {
+        "control": 1351,
+        "generic": 1350,
+        "personalized": 1350
+      },
+      "expected_per_arm": 1350.3333333333333,
+      "chi_square": 0.0004937052579609973,
+      "p_value": 0.9997531778366229,
+      "passes": true,
+      "decision_threshold": 0.01
+    },
+    "pre_treatment_balance": {
+      "standardized_mean_differences_vs_control": {
+        "generic": {
+          "historical_listing_count": -0.012531647946097464,
+          "historical_sales_count": 0.012596445721413085,
+          "historical_gmv": 0.04683818541228914,
+          "recent_event_count": 0.010277707501531402,
+          "recent_watchlist_count": 0.007027033340619549,
+          "recent_purchase_count": 0.0474546630870764,
+          "marketing_contacts_7d": -0.009184058119716927
+        },
+        "personalized": {
+          "historical_listing_count": -0.038969785739293564,
+          "historical_sales_count": -0.0341167457149845,
+          "historical_gmv": -0.023267228470347262,
+          "recent_event_count": -0.013489698320351523,
+          "recent_watchlist_count": 0.0004144741277929367,
+          "recent_purchase_count": 0.025561713258072206,
+          "marketing_contacts_7d": -0.022665040679139745
+        }
+      },
+      "max_absolute_smd": 0.0474546630870764,
+      "passes": true,
+      "decision_threshold": 0.1
+    }
+  },
+  "power_plan": {
+    "assumed_baseline_rate": 0.07,
+    "minimum_detectable_effect_pp": 4.0,
+    "alpha_per_comparison": 0.025,
+    "target_power": 0.8,
+    "required_members_per_arm": 972,
+    "observed_members_per_arm": 1350,
+    "passes": true
+  },
+  "decision": {
+    "best_observed_variant": "personalized",
+    "rollout_ready": true,
+    "recommendation": "Roll out personalized to a staged 50% audience, retain a 10% holdout, and monitor unsubscribe and listing quality."
+  },
+  "commercial_assumptions": {
+    "value_per_incremental_listing_nzd": 5.5,
+    "note": "Synthetic scenario assumption; not real company financial data."
+  },
+  "methodology": {
+    "test": "two-sided pooled two-proportion z-test",
+    "confidence_interval": "95% Newcombe score interval for absolute difference",
+    "multiple_comparison_control": "Bonferroni correction for two treatment arms",
+    "estimand": "intention-to-treat incremental conversion",
+    "randomization_validation": "sample-ratio-mismatch test plus pre-treatment standardized mean differences"
+  }
+}

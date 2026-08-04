@@ -1,0 +1,51 @@
+member_id,campaign_id,activation_channel,preferred_category,historical_listing_count,marketing_contacts_7d,audience_created_at
+M000009,seller_reactivation_2026_08,email,Computers,2,0,2026-08-01 09:00:00
+M000010,seller_reactivation_2026_08,email,Sports,3,0,2026-08-01 09:00:00
+M000013,seller_reactivation_2026_08,email,Collectables,1,0,2026-08-01 09:00:00
+M000014,seller_reactivation_2026_08,email,Electronics,1,0,2026-08-01 09:00:00
+M000019,seller_reactivation_2026_08,email,Home & living,2,0,2026-08-01 09:00:00
+M000020,seller_reactivation_2026_08,email,Electronics,4,0,2026-08-01 09:00:00
+M000021,seller_reactivation_2026_08,push,Computers,1,0,2026-08-01 09:00:00
+M000022,seller_reactivation_2026_08,push,Sports,1,0,2026-08-01 09:00:00
+M000025,seller_reactivation_2026_08,push,Sports,3,1,2026-08-01 09:00:00
+M000026,seller_reactivation_2026_08,push,Motors parts,1,0,2026-08-01 09:00:00
+M000027,seller_reactivation_2026_08,email,Electronics,1,0,2026-08-01 09:00:00
+M000029,seller_reactivation_2026_08,push,Electronics,2,0,2026-08-01 09:00:00
+M000032,seller_reactivation_2026_08,push,Electronics,1,0,2026-08-01 09:00:00
+M000033,seller_reactivation_2026_08,email,Motors parts,1,0,2026-08-01 09:00:00
+M000042,seller_reactivation_2026_08,push,Motors parts,2,0,2026-08-01 09:00:00
+M000043,seller_reactivation_2026_08,email,Home & living,2,0,2026-08-01 09:00:00
+M000044,seller_reactivation_2026_08,email,Electronics,1,0,2026-08-01 09:00:00
+M000045,seller_reactivation_2026_08,email,Motors parts,4,0,2026-08-01 09:00:00
+M000051,seller_reactivation_2026_08,email,Home & living,1,0,2026-08-01 09:00:00
+M000052,seller_reactivation_2026_08,push,Collectables,1,0,2026-08-01 09:00:00
+M000053,seller_reactivation_2026_08,email,Sports,2,0,2026-08-01 09:00:00
+M000057,seller_reactivation_2026_08,email,Fashion,4,1,2026-08-01 09:00:00
+M000059,seller_reactivation_2026_08,push,Fashion,1,0,2026-08-01 09:00:00
+M000060,seller_reactivation_2026_08,email,Computers,3,1,2026-08-01 09:00:00
+M000067,seller_reactivation_2026_08,email,Computers,1,0,2026-08-01 09:00:00
+M000070,seller_reactivation_2026_08,email,Electronics,2,0,2026-08-01 09:00:00
+M000072,seller_reactivation_2026_08,email,Motors parts,1,0,2026-08-01 09:00:00
+M000076,seller_reactivation_2026_08,email,Fashion,3,0,2026-08-01 09:00:00
+M000080,seller_reactivation_2026_08,email,Sports,1,1,2026-08-01 09:00:00
+M000083,seller_reactivation_2026_08,email,Sports,1,0,2026-08-01 09:00:00
+M000085,seller_reactivation_2026_08,push,Sports,3,0,2026-08-01 09:00:00
+M000086,seller_reactivation_2026_08,email,Computers,4,0,2026-08-01 09:00:00
+M000089,seller_reactivation_2026_08,email,Collectables,1,0,2026-08-01 09:00:00
+M000092,seller_reactivation_2026_08,email,Computers,5,0,2026-08-01 09:00:00
+M000093,seller_reactivation_2026_08,email,Collectables,4,0,2026-08-01 09:00:00
+M000099,seller_reactivation_2026_08,email,Computers,3,0,2026-08-01 09:00:00
+M000103,seller_reactivation_2026_08,email,Sports,2,0,2026-08-01 09:00:00
+M000106,seller_reactivation_2026_08,email,Motors parts,1,0,2026-08-01 09:00:00
+M000107,seller_reactivation_2026_08,email,Motors parts,5,0,2026-08-01 09:00:00
+M000110,seller_reactivation_2026_08,push,Motors parts,3,0,2026-08-01 09:00:00
+M000112,seller_reactivation_2026_08,email,Motors parts,3,0,2026-08-01 09:00:00
+M000122,seller_reactivation_2026_08,push,Computers,4,0,2026-08-01 09:00:00
+M000135,seller_reactivation_2026_08,email,Fashion,2,0,2026-08-01 09:00:00
+M000137,seller_reactivation_2026_08,email,Home & living,2,0,2026-08-01 09:00:00
+M000139,seller_reactivation_2026_08,email,Sports,1,0,2026-08-01 09:00:00
+M000146,seller_reactivation_2026_08,email,Sports,1,0,2026-08-01 09:00:00
+M000147,seller_reactivation_2026_08,email,Motors parts,3,1,2026-08-01 09:00:00
+M000150,seller_reactivation_2026_08,push,Home & living,3,0,2026-08-01 09:00:00
+M000151,seller_reactivation_2026_08,email,Electronics,3,1,2026-08-01 09:00:00
+M000161,seller_reactivation_2026_08,push,Home & living,1,0,2026-08-01 09:00:00

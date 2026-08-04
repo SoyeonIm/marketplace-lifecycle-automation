@@ -1,0 +1,119 @@
+from __future__ import annotations
+
+import json
+import re
+import sys
+import unittest
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.analyze_experiment import _two_proportion_test, analyze_experiment
+from src.build_dashboard import build_dashboard
+from src.config import DATABASE_PATH, RAW_DIR, REPORTS_DIR
+from src.generate_data import generate_data
+from src.pipeline import build_warehouse
+from src.quality_checks import run_quality_checks
+
+
+class EndToEndProjectTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        if not (RAW_DIR / "members.csv").exists():
+            generate_data(member_count=12_000, seed=42)
+        build_warehouse()
+        cls.quality = run_quality_checks(write_report=True)
+        cls.metrics = analyze_experiment()
+        cls.dashboard_path = build_dashboard()
+
+    def test_all_quality_and_campaign_safety_checks_pass(self) -> None:
+        failures = [check for check in self.quality if check["status"] != "PASS"]
+        self.assertEqual([], failures)
+        self.assertGreaterEqual(len(self.quality), 25)
+
+    def test_randomization_is_valid_before_reading_effects(self) -> None:
+        diagnostics = self.metrics["randomization_diagnostics"]
+        self.assertTrue(diagnostics["sample_ratio_mismatch"]["passes"])
+        self.assertTrue(diagnostics["pre_treatment_balance"]["passes"])
+        self.assertLess(diagnostics["pre_treatment_balance"]["max_absolute_smd"], 0.10)
+        self.assertTrue(self.metrics["power_plan"]["passes"])
+        self.assertGreaterEqual(
+            self.metrics["power_plan"]["observed_members_per_arm"],
+            self.metrics["power_plan"]["required_members_per_arm"],
+        )
+
+    def test_personalized_arm_has_positive_confirmatory_result(self) -> None:
+        comparison = self.metrics["comparisons_vs_control"]["personalized"]
+        self.assertGreater(comparison["absolute_uplift_pp"], 0)
+        self.assertGreater(comparison["ci_95_low_pp"], 0)
+        self.assertLess(comparison["bonferroni_p_value"], 0.05)
+        self.assertTrue(comparison["passes_unsubscribe_guardrail"])
+
+    def test_rollout_decision_requires_all_gates(self) -> None:
+        self.assertTrue(self.metrics["decision"]["rollout_ready"])
+        self.assertEqual(
+            "personalized", self.metrics["decision"]["best_observed_variant"]
+        )
+
+    def test_two_proportion_interval_contains_observed_difference(self) -> None:
+        result = _two_proportion_test(162, 1358, 93, 1358)
+        self.assertLess(result["ci_95_low_pp"], result["absolute_uplift_pp"])
+        self.assertGreater(result["ci_95_high_pp"], result["absolute_uplift_pp"])
+
+    def test_dashboard_and_activation_contract_are_generated(self) -> None:
+        self.assertTrue(self.dashboard_path.exists())
+        dashboard = self.dashboard_path.read_text(encoding="utf-8")
+        self.assertIn("Seller Reactivation Campaign", dashboard)
+        self.assertIn("Staged rollout recommended", dashboard)
+        sample = REPORTS_DIR / "activation_audience_sample.csv"
+        self.assertTrue(sample.exists())
+        header = sample.read_text(encoding="utf-8").splitlines()[0]
+        self.assertNotIn("email_address", header)
+        self.assertIn("member_id", header)
+
+    def test_metrics_artifact_labels_commercial_assumptions_synthetic(self) -> None:
+        metrics_path = REPORTS_DIR / "experiment_metrics.json"
+        artifact = json.loads(metrics_path.read_text(encoding="utf-8"))
+        self.assertIn("not real company financial data", artifact["commercial_assumptions"]["note"])
+
+    def test_readme_result_snapshot_matches_generated_metrics(self) -> None:
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        personalized = self.metrics["arms"]["personalized"]
+        control = self.metrics["arms"]["control"]
+        total = sum(arm["assigned_members"] for arm in self.metrics["arms"].values())
+        comparison = self.metrics["comparisons_vs_control"]["personalized"]
+        self.assertIn(f"{total:,} eligible", readme)
+        self.assertIn(f"{personalized['conversion_rate'] * 100:.2f}%", readme)
+        self.assertIn(f"{control['conversion_rate'] * 100:.2f}%", readme)
+        self.assertIn(f"{comparison['absolute_uplift_pp']:.2f} percentage points", readme)
+
+    def test_relative_markdown_links_resolve(self) -> None:
+        markdown_files = [PROJECT_ROOT / "README.md", PROJECT_ROOT / "dbt" / "README.md"]
+        markdown_files.extend(sorted((PROJECT_ROOT / "docs").glob("*.md")))
+        broken: list[str] = []
+        for markdown_path in markdown_files:
+            content = markdown_path.read_text(encoding="utf-8")
+            for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", content):
+                if target.startswith(("http://", "https://", "mailto:", "#")):
+                    continue
+                relative_target = target.split("#", 1)[0]
+                if not (markdown_path.parent / relative_target).resolve().exists():
+                    broken.append(f"{markdown_path.relative_to(PROJECT_ROOT)} -> {target}")
+        self.assertEqual([], broken)
+
+    def test_dbt_model_references_resolve_within_scaffold(self) -> None:
+        model_paths = list((PROJECT_ROOT / "dbt" / "models").rglob("*.sql"))
+        model_names = {path.stem for path in model_paths}
+        unresolved: list[str] = []
+        for model_path in model_paths:
+            sql = model_path.read_text(encoding="utf-8")
+            for reference in re.findall(r"ref\(['\"]([^'\"]+)['\"]\)", sql):
+                if reference not in model_names:
+                    unresolved.append(f"{model_path.name} -> {reference}")
+        self.assertEqual([], unresolved)
+
+
+if __name__ == "__main__":
+    unittest.main()

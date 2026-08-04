@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: marketplace_raw
+    description: Synthetic raw marketplace data loaded to Snowflake for the reference implementation.
+    database: "{{ env_var('DBT_SNOWFLAKE_DATABASE', 'MARKETPLACE_ANALYTICS') }}"
+    schema: RAW
+    tables:
+      - name: members
+        description: One campaign-date snapshot row per member.
+        columns:
+          - name: member_id
+            tests: [not_null, unique]
+      - name: events
+        description: Product behaviour events at event grain.
+        columns:
+          - name: event_id
+            tests: [not_null, unique]
+          - name: member_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('marketplace_raw', 'members')
+                  field: member_id
+      - name: listings
+        description: Marketplace listings at listing grain.
+        columns:
+          - name: listing_id
+            tests: [not_null, unique]
+          - name: member_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('marketplace_raw', 'members')
+                  field: member_id
+      - name: campaign_touches
+        description: Attempted campaign deliveries and responses.
+        columns:
+          - name: touch_id
+            tests: [not_null, unique]
+      - name: campaign_exclusions
+        description: Effective-dated holds and cross-campaign exclusions.
+      - name: experiment_assignments
+        description: One pre-exposure assignment per eligible member.
+        columns:
+          - name: member_id
+            tests: [not_null, unique]

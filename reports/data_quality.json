@@ -1,0 +1,184 @@
+[
+  {
+    "name": "member_primary_key_unique",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Every member has one canonical record."
+  },
+  {
+    "name": "event_primary_key_unique",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Product event IDs are unique."
+  },
+  {
+    "name": "listing_primary_key_unique",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Listing IDs are unique."
+  },
+  {
+    "name": "event_member_referential_integrity",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "All product events resolve to a known member."
+  },
+  {
+    "name": "anonymous_identity_maps_to_one_member",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "An anonymous browser or app identifier never resolves to multiple members."
+  },
+  {
+    "name": "accepted_event_names",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "The event stream conforms to the governed tracking plan."
+  },
+  {
+    "name": "events_not_before_member_join",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "No known-member event predates the member record."
+  },
+  {
+    "name": "listing_member_referential_integrity",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "All listings resolve to a known member."
+  },
+  {
+    "name": "listing_sale_after_creation",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "A sold timestamp cannot precede listing creation."
+  },
+  {
+    "name": "touch_member_referential_integrity",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "All campaign touches resolve to a known member."
+  },
+  {
+    "name": "accepted_consent_statuses",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Consent history uses governed status values."
+  },
+  {
+    "name": "campaign_date_consent_snapshot_reconciles",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Campaign-date member consent flags reconcile to consent history."
+  },
+  {
+    "name": "audience_has_channel_consent",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Every activated member has campaign-date consent for the selected channel."
+  },
+  {
+    "name": "audience_has_no_suppressed_members",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Suppressed members never enter the activation audience."
+  },
+  {
+    "name": "audience_respects_contact_cap",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Eligible members have received fewer than two marketing contacts in seven days."
+  },
+  {
+    "name": "audience_has_no_campaign_conflict",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "High-priority journeys and holdouts are excluded."
+  },
+  {
+    "name": "audience_is_lapsed_and_recently_active",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Audience members are both 90-day lapsed sellers and recently active."
+  },
+  {
+    "name": "experiment_assignment_unique",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Each eligible member receives exactly one experiment assignment."
+  },
+  {
+    "name": "accepted_experiment_variants",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Assignments use only pre-registered experiment variants."
+  },
+  {
+    "name": "assignment_precedes_campaign",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Randomization is completed before campaign exposure."
+  },
+  {
+    "name": "all_audience_members_randomized",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "No eligible audience member is missing an assignment."
+  },
+  {
+    "name": "no_ineligible_member_randomized",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Assignments contain no member outside the governed audience."
+  },
+  {
+    "name": "control_receives_no_campaign_message",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "The control group remains unexposed."
+  },
+  {
+    "name": "treatments_receive_one_campaign_message",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Every treatment member receives one initial campaign touch."
+  },
+  {
+    "name": "experiment_groups_balanced",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "Deterministic randomization keeps arm sizes within one member."
+  },
+  {
+    "name": "experiment_results_reconcile",
+    "status": "PASS",
+    "actual": 0,
+    "expected": 0,
+    "detail": "The aggregated experiment population reconciles to the governed audience."
+  }
+]

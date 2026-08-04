@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Marketplace Seller Reactivation | Campaign Analytics</title>
+  <style>
+    :root { --ink:#17212b; --muted:#687583; --line:#dfe5ea; --blue:#087ec7; --orange:#f6a800; --green:#14845c; --bg:#f4f7f9; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { color:white; padding:46px 7vw 38px; background:linear-gradient(125deg,#075f9e,#0a8ed7 62%,#f6a800 160%); }
+    header p { max-width:820px; margin:10px 0 0; color:#dcedf8; line-height:1.55; }
+    h1 { margin:0; font-size:clamp(30px,4vw,48px); letter-spacing:-1.2px; }
+    h2 { margin:0 0 18px; font-size:22px; }
+    .eyebrow { color:#f9c548; text-transform:uppercase; letter-spacing:.12em; font-weight:750; font-size:12px; margin-bottom:10px; }
+    main { width:min(1180px,92vw); margin:-20px auto 54px; }
+    .grid { display:grid; gap:18px; }
+    .kpis { grid-template-columns:repeat(4,1fr); }
+    .two { grid-template-columns:1.15fr .85fr; margin-top:18px; }
+    .card { background:white; border:1px solid var(--line); border-radius:14px; box-shadow:0 5px 22px rgba(26,50,71,.07); padding:24px; }
+    .kpi .label { font-size:13px; color:var(--muted); font-weight:650; }
+    .kpi .value { font-size:32px; font-weight:780; margin:7px 0 4px; letter-spacing:-.7px; }
+    .kpi .note { font-size:12px; color:var(--muted); line-height:1.4; }
+    .decision { margin-top:18px; border-left:5px solid var(--green); }
+    .decision strong { color:var(--green); }
+    .bar-row { display:grid; grid-template-columns:110px 1fr 64px; gap:12px; align-items:center; margin:17px 0; }
+    .bar-label,.bar-value { font-size:13px; font-weight:700; }
+    .bar-value { text-align:right; }
+    .bar-track { height:20px; background:#edf1f4; border-radius:20px; overflow:hidden; }
+    .bar { height:100%; border-radius:20px; background:#9aa8b3; }
+    .bar.generic { background:var(--blue); } .bar.personalized { background:var(--orange); }
+    .funnel-row { margin:12px 0; }
+    .funnel-row>div:first-child { display:flex; justify-content:space-between; font-size:13px; }
+    .funnel-row span { color:var(--muted); }
+    .funnel-track { height:8px; border-radius:8px; background:#edf1f4; margin-top:6px; overflow:hidden; }
+    .funnel-track div { height:100%; background:linear-gradient(90deg,var(--blue),#43a8df); border-radius:8px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { color:var(--muted); text-align:left; font-weight:700; border-bottom:1px solid var(--line); padding:11px 9px; }
+    td { border-bottom:1px solid #edf1f4; padding:13px 9px; white-space:nowrap; }
+    .table-wrap { overflow-x:auto; }
+    .category-row { display:grid; grid-template-columns:120px 1fr 50px; align-items:center; gap:10px; font-size:12px; margin:11px 0; }
+    .category-row div { height:9px; background:#edf1f4; border-radius:9px; overflow:hidden; }
+    .category-row i { display:block; height:100%; background:var(--orange); border-radius:9px; }
+    .category-row b { text-align:right; }
+    .method { color:var(--muted); font-size:12px; line-height:1.6; margin-top:16px; }
+    footer { color:var(--muted); text-align:center; font-size:12px; padding:12px 0 30px; }
+    @media(max-width:850px) { .kpis,.two { grid-template-columns:1fr 1fr; } }
+    @media(max-width:560px) { .kpis,.two { grid-template-columns:1fr; } header { padding-left:5vw; padding-right:5vw; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Synthetic lifecycle analytics · August 2026</div>
+    <h1>Seller Reactivation Campaign</h1>
+    <p>An end-to-end lifecycle analytics project: governed audience creation, randomized campaign testing, incrementality, customer guardrails and commercial decisioning.</p>
+  </header>
+  <main>
+    <section class="grid kpis">
+      <article class="card kpi"><div class="label">Eligible audience</div><div class="value">4,051</div><div class="note">After consent, suppression, recency and campaign-conflict rules</div></article>
+      <article class="card kpi"><div class="label">Best absolute uplift</div><div class="value">3.41 pp</div><div class="note">Personalized versus randomized control</div></article>
+      <article class="card kpi"><div class="label">Estimated incremental listings</div><div class="value">46.1</div><div class="note">Intention-to-treat estimate within 14 days</div></article>
+      <article class="card kpi"><div class="label">Data quality</div><div class="value">26/26</div><div class="note">Automated integrity, consent and campaign-safety checks passed</div></article>
+    </section>
+
+    <section class="card decision">
+      <h2>Decision</h2>
+      <p><strong>Staged rollout recommended.</strong> Roll out personalized to a staged 50% audience, retain a 10% holdout, and monitor unsubscribe and listing quality.</p>
+    </section>
+
+    <section class="grid two">
+      <article class="card"><h2>14-day listing conversion</h2>
+        <div class="bar-row">
+          <div class="bar-label">Control</div>
+          <div class="bar-track"><div class="bar control" style="width:58.2%"></div></div>
+          <div class="bar-value">7.92%</div>
+        </div>
+
+        <div class="bar-row">
+          <div class="bar-label">Generic</div>
+          <div class="bar-track"><div class="bar generic" style="width:73.0%"></div></div>
+          <div class="bar-value">9.93%</div>
+        </div>
+
+        <div class="bar-row">
+          <div class="bar-label">Personalized</div>
+          <div class="bar-track"><div class="bar personalized" style="width:83.3%"></div></div>
+          <div class="bar-value">11.33%</div>
+        </div>
+        <p class="method">Primary KPI: at least one listing created within 14 days. Open and click metrics are diagnostic, not the decision metric.</p></article>
+      <article class="card"><h2>Governed audience funnel</h2>
+        <div class="funnel-row">
+          <div><strong>All members</strong><span>12,000</span></div>
+          <div class="funnel-track"><div style="width:100.0%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>Seller history</strong><span>7,580</span></div>
+          <div class="funnel-track"><div style="width:63.2%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>Lapsed 90+ days</strong><span>4,833</span></div>
+          <div class="funnel-track"><div style="width:40.3%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>Recently active</strong><span>4,518</span></div>
+          <div class="funnel-track"><div style="width:37.6%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>Marketing consent</strong><span>4,417</span></div>
+          <div class="funnel-track"><div style="width:36.8%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>Not suppressed</strong><span>4,336</span></div>
+          <div class="funnel-track"><div style="width:36.1%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>Within contact cap</strong><span>4,269</span></div>
+          <div class="funnel-track"><div style="width:35.6%"></div></div>
+        </div>
+
+        <div class="funnel-row">
+          <div><strong>No campaign conflict</strong><span>4,051</span></div>
+          <div class="funnel-track"><div style="width:33.8%"></div></div>
+        </div>
+        </article>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+      <h2>Incrementality, guardrails and scenario ROI</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Variant</th><th>Members</th><th>Conversion</th><th>Uplift</th><th>95% CI</th><th>Adj. p</th><th>Unsubscribe</th><th>ROI</th></tr></thead>
+        <tbody>
+        <tr>
+          <td>Generic</td>
+          <td>1,350</td>
+          <td>9.93%</td>
+          <td>2.01 pp</td>
+          <td>-0.15 to 4.17 pp</td>
+          <td>0.1350</td>
+          <td>0.74%</td>
+          <td>48.6%</td>
+        </tr>
+
+        <tr>
+          <td>Personalized</td>
+          <td>1,350</td>
+          <td>11.33%</td>
+          <td>3.41 pp</td>
+          <td>1.19 to 5.65 pp</td>
+          <td>0.0053</td>
+          <td>0.22%</td>
+          <td>72.4%</td>
+        </tr>
+        </tbody>
+      </table></div>
+      <p class="method">ROI uses a synthetic NZ$5.50 value per incremental listing plus illustrative campaign costs. It demonstrates the decision framework and is not real company financial data.</p>
+    </section>
+
+    <section class="grid two">
+      <article class="card"><h2>Audience by recent category signal</h2>
+        <div class="category-row">
+          <span>Motors parts</span>
+          <div><i style="width:100.0%"></i></div>
+          <b>602</b>
+        </div>
+
+        <div class="category-row">
+          <span>Fashion</span>
+          <div><i style="width:99.3%"></i></div>
+          <b>598</b>
+        </div>
+
+        <div class="category-row">
+          <span>Sports</span>
+          <div><i style="width:98.7%"></i></div>
+          <b>594</b>
+        </div>
+
+        <div class="category-row">
+          <span>Collectables</span>
+          <div><i style="width:95.7%"></i></div>
+          <b>576</b>
+        </div>
+
+        <div class="category-row">
+          <span>Electronics</span>
+          <div><i style="width:93.5%"></i></div>
+          <b>563</b>
+        </div>
+
+        <div class="category-row">
+          <span>Computers</span>
+          <div><i style="width:93.5%"></i></div>
+          <b>563</b>
+        </div>
+
+        <div class="category-row">
+          <span>Home &amp; living</span>
+          <div><i style="width:92.0%"></i></div>
+          <b>554</b>
+        </div>
+
+        <div class="category-row">
+          <span>Unknown</span>
+          <div><i style="width:0.2%"></i></div>
+          <b>1</b>
+        </div>
+        </article>
+      <article class="card"><h2>Measurement design</h2>
+        <ul class="method">
+          <li>Random assignment across control, generic and personalized arms</li>
+          <li>Two-sided two-proportion z-tests</li>
+          <li>Newcombe 95% score intervals for absolute uplift</li>
+          <li>Bonferroni correction for two treatment comparisons</li>
+          <li>SRM p-value: 0.9998</li>
+          <li>Maximum absolute pre-treatment SMD: 0.047</li>
+          <li>Power plan: 1,350 observed vs 972 required per arm</li>
+          <li>1% unsubscribe guardrail and persistent control discipline</li>
+          <li>All source data is deterministic, fictional and privacy-safe</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <footer>Marketplace Lifecycle Automation · Synthetic data only · No real member or company data</footer>
+</body>
+</html>

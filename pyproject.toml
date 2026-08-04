@@ -1,0 +1,9 @@
+[project]
+name = "marketplace-lifecycle-automation"
+version = "1.0.0"
+description = "Synthetic end-to-end lifecycle campaign analytics reference implementation"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

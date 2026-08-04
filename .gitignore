@@ -1,0 +1,25 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets.*
+credentials.*
+
+# Local-only documentation is excluded from version control.
+docs/README_KO.md
+
+data/raw/*.csv
+data/warehouse.sqlite
+data/warehouse.sqlite-shm
+data/warehouse.sqlite-wal
+
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/profiles.yml

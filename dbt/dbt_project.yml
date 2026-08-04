@@ -1,0 +1,33 @@
+name: marketplace_lifecycle
+version: 1.0.0
+config-version: 2
+
+profile: marketplace_lifecycle
+
+model-paths: ["models"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  campaign_at: "2026-08-01 09:00:00"
+  recent_activity_start: "2026-07-02 09:00:00"
+  lapsed_cutoff: "2026-05-03 09:00:00"
+  contact_cap_start: "2026-07-25 09:00:00"
+  analysis_end_at: "2026-08-15 23:59:59"
+  campaign_id: "seller_reactivation_2026_08"
+
+models:
+  marketplace_lifecycle:
+    +persist_docs:
+      relation: true
+      columns: true
+    staging:
+      +materialized: view
+      +schema: lifecycle_staging
+    intermediate:
+      +materialized: table
+      +schema: lifecycle_intermediate
+    marts:
+      +materialized: table
+      +schema: lifecycle_marts
+
